@@ -2,5 +2,5 @@
 
 
 ## Data
-- Download the [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=70229053)
+- Download the [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=70229053) using the [NBIA data retriever](https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images#DownloadingTCIAImages-DownloadingtheNBIADataRetriever)
 

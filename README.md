@@ -4,3 +4,6 @@
 ## Data
 - Download the [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=70229053) using the [NBIA data retriever](https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images#DownloadingTCIAImages-DownloadingtheNBIADataRetriever)
 
+## Pre-processing
+- Organise the folder structure using this [script](https://github.com/KCL-BMEIS/VS_Seg/tree/master/preprocessing#create-data-set-with-convenient-folder-structure)
+- Merge contours and transformation matrices by running merge_contours.py

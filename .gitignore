@@ -1,2 +1,4 @@
 preprocess.py
 .vscode/
+TCIA_data_convert_into_convenient_folder_structure.py
+data_conversion.py

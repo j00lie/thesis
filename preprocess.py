@@ -5,13 +5,14 @@ from glob import glob
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import random
-from sklearn.model_selection import train_test_split
-import tensorflow as tf
-import segmentation_models_3D as sm
 
-IMG_WIDTH = 128
-IMG_HEIGHT = 128
+
+IMG_WIDTH = 64
+IMG_HEIGHT = 64
 IMG_DEPTH = 64
+IMG_CHANNELS = 1
+SEED = 42
+random.seed(SEED)
 
 
 def load_and_resize_nifti(file_path, target_shape=(IMG_WIDTH, IMG_HEIGHT, IMG_DEPTH)):
@@ -65,6 +66,7 @@ mri_dims_arr = np.array(mri_dims)
 mask_dims_arr = np.array(mask_dims)
 
 
+# Check the original shapes of the 3D image arrays
 def print_shapes(dim_array):
     # Extract unique widths and their counts
     unique_widths, counts_widths = np.unique(dim_array[:, 0], return_counts=True)
@@ -91,10 +93,12 @@ def print_shapes(dim_array):
 print_shapes(mri_dims_arr)
 print_shapes(mask_dims_arr)
 
+# Transform masks to boolean
 for i, mask in enumerate(masks):
     masks[i] = np.array(mask, dtype=bool)
 
 
+# randomly check that masks and image correlate
 def imgSanity(imgArray, maskArray):
     # Randomly select an image stack
     r_numb = random.randrange(0, len(imgArray))
@@ -131,74 +135,3 @@ def imgSanity(imgArray, maskArray):
 
 
 imgSanity(mris, masks)
-
-
-def standardize_3d_image(img):
-    """
-    Standardize a 3D image using Z-score normalization.
-
-    Parameters:
-    - img: 3D numpy array representing the MRI image.
-
-    Returns:
-    - standardized_img: 3D numpy array representing the standardized MRI image.
-    """
-    mean = np.mean(img)
-    std = np.std(img)
-    standardized_img = (img - mean) / std
-    return standardized_img
-
-
-for idx, mri in enumerate(mris):
-    mris[idx] = standardize_3d_image(mri)
-
-
-X_train, X_test, Y_train, Y_test = train_test_split(
-    mris, masks, test_size=0.20, shuffle=True
-)
-
-X_train = np.array(X_train, dtype=np.float32)
-Y_train = np.array(Y_train, dtype=np.float32)
-X_test = np.array(X_test, dtype=np.float32)
-Y_test = np.array(Y_test, dtype=np.float32)
-
-print(
-    f"Training data\nDimensions: {X_train.shape}\nMax-value: {np.max(X_train)}\nMin-value: {np.min(X_train)}"
-)
-print(
-    f"Test data\nDimensions: {X_test.shape}\nMax-value: {np.max(X_test)}\nMin-value: {np.min(X_test)}"
-)
-
-
-model = sm.Unet(
-    "resnet34",
-    input_shape=(IMG_WIDTH, IMG_HEIGHT, IMG_DEPTH),
-    encoder_weights=None,
-    activation="sigmoid",
-)
-
-
-dice_loss = sm.losses.DiceLoss()
-bce_loss = sm.losses.BinaryCELoss()
-total_loss = dice_loss + bce_loss
-
-
-initial_learning_rate = 0.001
-lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-    initial_learning_rate, decay_steps=100000, decay_rate=0.96, staircase=True
-)
-model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=lr_schedule),
-    loss=total_loss,
-    metrics=[sm.metrics.IOUScore()],
-)
-
-
-cb = tf.keras.callbacks.EarlyStopping(
-    monitor="val_iou_score", mode="max", patience=10, restore_best_weights=True
-)
-
-
-history = model.fit(
-    X_train, Y_train, epochs=100, batch_size=1, validation_split=0.20, callbacks=[cb]
-)

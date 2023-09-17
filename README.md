@@ -11,3 +11,6 @@
 - Extract the T1 MRI sequences by running the [extract_t1.py](https://github.com/j00lie/thesis/blob/main/extract_t1.py)
 - Resize and save images as numpy arrays by following along the [preprocessing notebook](https://github.com/j00lie/thesis/blob/main/preprocess.ipynb)
 
+## Training
+- Follow along the [training notebook](https://github.com/j00lie/thesis/blob/main/train.ipynb)
+  - Note: For running in Google Colab connect your github to your Colab and upload the preprocessed numpy files to your drive   

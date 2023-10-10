@@ -14,4 +14,5 @@
 ## Training and Evaluating the model
 - Follow along the [training notebook](https://github.com/j00lie/thesis/blob/main/train.ipynb)
   - Note: For running in Google Colab connect your github to your Colab and upload the preprocessed numpy files to your drive
-- 5-fold cross-validation implemented [here](https://github.com/j00lie/thesis/blob/main/train_5foldCV.ipynb) 
+- 5-fold cross-validation implemented [here](https://github.com/j00lie/thesis/blob/main/train_5foldCV.ipynb)
+- Evaluation with the independent test set [here](https://github.com/j00lie/thesis/blob/main/evaluate.ipynb)
